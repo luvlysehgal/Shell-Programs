@@ -1,42 +1,47 @@
 #!/bin/bash -x
 threeDigitNum=$((RANDOM%900+100))
+echo $threeDigitNum
+declare -A number=([even]=0 [odd]=0)
+declare -A primenum=([count]=0)
 for (( i=2;$threeDigitNum>1;i++ ))
 do
    while [ $(($threeDigitNum%$i)) -eq 0 ]
    do
-      array2[$i]=$i
-      echo ${array2[$i]}
       threeDigitNum=$(($threeDigitNum/$i))
-      if [[ ${array[$i]} % 2 -eq 0 ]]
+      primefac[i]=$(($i))
+      echo "Prime number is: " ${primefac[i]}
+      if [ $((${primefac[i]}%2)) -eq 0 ]
       then
-          echo ${array[$i]} " is even number"
-          number[even]=$i
+          arr1[i]=$(($i))
+          ((number[even]++))
       else
-          echo ${array[$i]} " is odd number"
-          number[odd]=$i
+          arr2[i]=$(($i))
+          ((number[odd]++))
       fi
    done
 done
 echo "....The Prime factor of number is..." 
-echo ${array2[@]}
-echo ${number[@]} "These are the even numbers"
-echo ${number[@]} "These are the odd numbers"
+echo "${primefac[@]}"
+echo "Even:  " ${arr1[@]}
+echo "Odd: " ${arr2[@]}
+echo "KEYS: ${!number[@]}"
+echo "COUNT: ${number[@]}"
+
 revnum=0
-palindrome() {
+function palindrome() {
 
    num=$1
-   while [ $threeDigitNum -gt 0 ]
+   while [ $num -gt 0 ]
    do
-      singledig=$(($threeDigNum%10))
+      singledig=$(($num%10))
       revnum=$(($revnum*10+$singledig))
-      num=$(($threeDigitNum/10))
+      num=$(($num/10))
    done
-   return $revnum
+   echo $revnum
 }
-
-orignum=$threeDigNum
-palindrome $threeDigitNum
-revnum=$?
+threeDigitNum2=$((RANDOM%900+100))
+orignum=$threeDigitNum2
+revnum="$( palindrome $threeDigitNum2 )" 
 if [ $revnum -eq $orignum ]
 then
    echo "This is  Palindrome number"
